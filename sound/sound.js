@@ -49,7 +49,8 @@ class Sound {
     frequency = Sound.DEFAULT_FREQUENCY,
     duration = Sound.DEFAULT_DURATION,
     volume = Sound.DEFAULT_VOLUME,
-    fade = Sound.DEFAULT_FADE
+    fade = Sound.DEFAULT_FADE,
+    healthCheck = true
   ) {
     this.oscillatorType = oscillatorType;
     this.frequency = frequency;
@@ -57,6 +58,8 @@ class Sound {
     this.volume = Math.max(0, Math.min(1, volume));
     if (Array.isArray(fade)) this.fade = fade.map((v) => v * this.volume);
     else this.fade = fade;
+
+    healthCheck && this.healthCheck();
   }
   static fromConfig(config) {
     return new Sound(
@@ -64,7 +67,8 @@ class Sound {
       config.frequency,
       config.duration,
       config.volume,
-      config.fade
+      config.fade,
+      config.healthCheck
     );
   }
   static fromFrequency(frequency, config = {}) {
@@ -75,6 +79,23 @@ class Sound {
     config.frequency = Sound.noteToFrequency(note, octave);
     return Sound.fromConfig(config);
   }
+
+  healthCheck() {
+    if (!Object.values(Sound.OSC_TYPES).includes(this.oscillatorType))
+      throw new Error("Invalid oscillator type: " + this.oscillatorType);
+
+    if (this.frequency <= 0) throw new Error("Frequency must be positive");
+
+    if (this.duration <= 0) throw new Error("Duration must be positive");
+
+    if (
+      !Array.isArray(this.fade) &&
+      !Object.values(Sound.FADE_TYPES).includes(this.fade)
+    )
+      throw new Error("Invalid fade type");
+  }
+
+  // ----------------- Methods -----------------
 
   setup() {
     const oscillator = Sound.audioContext.createOscillator();
