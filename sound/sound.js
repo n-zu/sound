@@ -125,14 +125,14 @@ class Sound {
       );
   }
 
-  play() {
+  play(time = Sound.audioContext.currentTime) {
     const { oscillator, gainNode } = this.setup();
 
-    oscillator.start(Sound.audioContext.currentTime);
+    oscillator.start(time);
 
     this.setFade(gainNode);
 
-    const endTime = Sound.audioContext.currentTime + this.duration + 0.01;
+    const endTime = time + this.duration + 0.01;
     oscillator.stop(endTime);
   }
 }
