@@ -1,25 +1,32 @@
 import Sound from "../sound/sound.js";
 import Chord from "../sound/chord.js";
 
-const setSelectOptions = (selectId, optionMap) => {
+const setSelectOptions = (selectId, optionMap, groupIfString = false) => {
   const select = document.getElementById(selectId);
+  let optgroup = select;
 
   while (select.firstChild) {
     select.removeChild(select.firstChild);
   }
 
   Object.keys(optionMap).forEach((key) => {
-    const option = document.createElement("option");
-    option.value = key;
-    option.text = key;
-    select.appendChild(option);
+    if (groupIfString && typeof optionMap[key] === "string") {
+      optgroup = document.createElement("optgroup");
+      optgroup.label = optionMap[key];
+      select.appendChild(optgroup);
+    } else {
+      const option = document.createElement("option");
+      option.value = key;
+      option.text = key;
+      optgroup.appendChild(option);
+    }
   });
 };
 
 setSelectOptions("osc-type", Sound.OSC_TYPES);
 setSelectOptions("note", Sound.NOTES);
 setSelectOptions("fade", Sound.FADE_TYPES);
-setSelectOptions("chord", Chord.TYPES);
+setSelectOptions("chord", Chord.TYPES, true);
 
 const getConfig = () => {
   const oscillatorTypeKey = document.getElementById("osc-type").value;

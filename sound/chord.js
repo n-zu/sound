@@ -2,22 +2,30 @@ import Sound from "./sound.js";
 
 class Chord {
   static TYPES = {
+    _MAJOR: "MAJOR",
     MAJOR: [0, 4, 7],
     SEVENTH: [0, 4, 7, 10],
     NINTH: [0, 4, 7, 10, 14],
     ELEVENTH: [0, 4, 7, 10, 14, 17],
     THIRTEENTH: [0, 4, 7, 10, 14, 17, 21],
 
+    _MINOR: "MINOR",
     MINOR: [0, 3, 7],
     MINOR_SEVENTH: [0, 3, 7, 10],
     MINOR_NINTH: [0, 3, 7, 10, 14],
     MINOR_ELEVENTH: [0, 3, 7, 10, 14, 17],
     MINOR_THIRTEENTH: [0, 3, 7, 10, 14, 17, 21],
 
+    _SPECIAL: "SPECIAL",
     AUGMENTED: [0, 4, 8],
     DIMINISHED: [0, 3, 6],
     SUSPENDED: [0, 5, 7],
     POWER: [0, 7],
+
+    _CUSTOM: "CUSTOM",
+    SIMPLE: [1, 2],
+    COMPACT: [1, 2, 3],
+    FIBONACCI_5: [1, 2, 3, 5, 8],
   };
 
   static DEFAULT_TYPE = Chord.TYPES.MAJOR;
