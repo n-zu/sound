@@ -1,5 +1,5 @@
-import Sound from "../sound/sound.js";
-import Chord from "../sound/chord.js";
+import Sound from "../src/sound.js";
+import Chord from "../src/chord.js";
 
 const setSelectOptions = (selectId, optionMap, groupIfString = false) => {
   const select = document.getElementById(selectId);
