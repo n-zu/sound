@@ -26,7 +26,7 @@ const setSelectOptions = (selectId, optionMap, groupIfString = false) => {
 setSelectOptions("osc-type", Sound.OSC_TYPES);
 setSelectOptions("note", Sound.NOTES);
 setSelectOptions("fade", Sound.FADE_TYPES);
-setSelectOptions("chord", Chord.TYPES, true);
+setSelectOptions("chord", Chord._TYPES, true);
 
 const getConfig = () => {
   const oscillatorTypeKey = document.getElementById("osc-type").value;

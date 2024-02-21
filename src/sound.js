@@ -31,9 +31,9 @@ class Sound {
   static FADE_TYPES = {
     EXPONENTIAL: "exponential",
     LINEAR: "linear",
-    PULSE: [1, 0, 1, 0, 1, 0],
-    DECRESCENDO: [1, 0.9, 0.7, 0.4, 0.2, 0.1, 0],
-    CRESCENDO: [0, 0.1, 0.2, 0.4, 0.7, 0.9, 1, 0],
+    SPIKE: "spike",
+    THUD: "thud",
+    PULSE: "pulse",
   };
 
   static DEFAULT_OSCTYPE = Sound.OSC_TYPES.SINE;
@@ -41,6 +41,10 @@ class Sound {
   static DEFAULT_DURATION = 0.5;
   static DEFAULT_VOLUME = 0.5;
   static DEFAULT_FADE = Sound.FADE_TYPES.EXPONENTIAL;
+
+  static currentTime() {
+    return Sound.audioContext.currentTime;
+  }
 
   // ----------------- Constructors -----------------
 
@@ -106,26 +110,20 @@ class Sound {
     oscillator.type = this.oscillatorType;
     oscillator.frequency.value = this.frequency;
 
-    gainNode.gain.setValueAtTime(this.volume, Sound.audioContext.currentTime);
+    gainNode.gain.setValueAtTime(this.volume, Sound.currentTime());
 
     return { oscillator, gainNode };
   }
 
   setFade(gainNode) {
-    const endTime = Sound.audioContext.currentTime + this.duration;
-    if (this.fade === Sound.FADE_TYPES.EXPONENTIAL)
-      gainNode.gain.exponentialRampToValueAtTime(0.001, endTime);
-    else if (this.fade === Sound.FADE_TYPES.LINEAR)
-      gainNode.gain.linearRampToValueAtTime(0, endTime);
-    else
-      gainNode.gain.setValueCurveAtTime(
-        this.fade, // Float32Array
-        Sound.audioContext.currentTime,
-        this.duration
-      );
+    FadeHandler.setFade(gainNode, this);
   }
 
-  play(time = Sound.audioContext.currentTime) {
+  endTime() {
+    return Sound.currentTime() + this.duration;
+  }
+
+  play(time = Sound.currentTime()) {
     const { oscillator, gainNode } = this.setup();
 
     oscillator.start(time);
@@ -138,3 +136,70 @@ class Sound {
 }
 
 export default Sound;
+
+class FadeHandler {
+  static ARRAY_PRECISION = 1000;
+
+  static setFade(gainNode, sound) {
+    if (sound.fade === Sound.FADE_TYPES.EXPONENTIAL)
+      FadeHandler.exponential(gainNode, sound);
+    else if (sound.fade === Sound.FADE_TYPES.LINEAR)
+      FadeHandler.linear(gainNode, sound);
+    else if (sound.fade === Sound.FADE_TYPES.SPIKE)
+      FadeHandler.spike(gainNode, sound);
+    else if (sound.fade === Sound.FADE_TYPES.THUD)
+      FadeHandler.thud(gainNode, sound);
+    else if (sound.fade === Sound.FADE_TYPES.PULSE)
+      FadeHandler.pulse(gainNode, sound);
+    else if (Array.isArray(sound.fade)) FadeHandler.custom(gainNode, sound);
+  }
+
+  static exponential(gainNode, sound) {
+    gainNode.gain.exponentialRampToValueAtTime(0.001, sound.endTime());
+  }
+
+  static linear(gainNode, sound) {
+    gainNode.gain.linearRampToValueAtTime(0, sound.endTime());
+  }
+
+  static spike(gainNode, sound) {
+    const valueArray = new Float32Array(FadeHandler.ARRAY_PRECISION);
+    const half = FadeHandler.ARRAY_PRECISION / 2;
+    for (let i = 0; i < half; i++) {
+      valueArray[i] = (i / half) * sound.volume;
+      valueArray[FadeHandler.ARRAY_PRECISION - i - 1] = valueArray[i];
+    }
+    FadeHandler.custom(gainNode, sound, valueArray);
+  }
+
+  static thud(gainNode, sound) {
+    const exp = 2;
+    const valueArray = new Float32Array(FadeHandler.ARRAY_PRECISION);
+    const half = FadeHandler.ARRAY_PRECISION / 2;
+    for (let i = 0; i < half; i++) {
+      valueArray[i] = (sound.volume * i ** exp) / half ** exp;
+      valueArray[FadeHandler.ARRAY_PRECISION - i - 1] = valueArray[i];
+    }
+    FadeHandler.custom(gainNode, sound, valueArray);
+  }
+
+  static pulse(gainNode, sound) {
+    const valueArray = new Float32Array(FadeHandler.ARRAY_PRECISION);
+    const lim = FadeHandler.ARRAY_PRECISION;
+    for (let i = 0; i < lim; i++) {
+      valueArray[i] = Math.sin((i / lim) * Math.PI);
+      if (valueArray[i] < 0.5) valueArray[i] *= 2 * valueArray[i];
+      else valueArray[i] = 1 - (1 - valueArray[i]) ** 2;
+      valueArray[i] *= sound.volume;
+    }
+    FadeHandler.custom(gainNode, sound, valueArray);
+  }
+
+  static custom(gainNode, sound, valueArray) {
+    gainNode.gain.setValueCurveAtTime(
+      valueArray, // Float32Array
+      Sound.audioContext.currentTime,
+      sound.duration
+    );
+  }
+}
