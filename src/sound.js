@@ -32,8 +32,8 @@ class Sound {
     EXPONENTIAL: "exponential",
     LINEAR: "linear",
     SPIKE: "spike",
-    THUD: "thud",
     PULSE: "pulse",
+    WAVE: "wave",
   };
 
   static DEFAULT_OSCTYPE = Sound.OSC_TYPES.SINE;
@@ -119,8 +119,8 @@ class Sound {
     FadeHandler.setFade(gainNode, this);
   }
 
-  endTime() {
-    return Sound.currentTime() + this.duration;
+  time(t = 0) {
+    return Sound.currentTime() + t * this.duration;
   }
 
   play(time = Sound.currentTime()) {
@@ -147,52 +147,40 @@ class FadeHandler {
       FadeHandler.linear(gainNode, sound);
     else if (sound.fade === Sound.FADE_TYPES.SPIKE)
       FadeHandler.spike(gainNode, sound);
-    else if (sound.fade === Sound.FADE_TYPES.THUD)
-      FadeHandler.thud(gainNode, sound);
     else if (sound.fade === Sound.FADE_TYPES.PULSE)
       FadeHandler.pulse(gainNode, sound);
+    else if (sound.fade === Sound.FADE_TYPES.WAVE)
+      FadeHandler.wave(gainNode, sound);
     else if (Array.isArray(sound.fade)) FadeHandler.custom(gainNode, sound);
   }
 
   static exponential(gainNode, sound) {
-    gainNode.gain.exponentialRampToValueAtTime(0.001, sound.endTime());
+    gainNode.gain.exponentialRampToValueAtTime(0.001, sound.time(1));
   }
 
   static linear(gainNode, sound) {
-    gainNode.gain.linearRampToValueAtTime(0, sound.endTime());
+    gainNode.gain.linearRampToValueAtTime(0, sound.time(1));
   }
 
   static spike(gainNode, sound) {
-    const valueArray = new Float32Array(FadeHandler.ARRAY_PRECISION);
-    const half = FadeHandler.ARRAY_PRECISION / 2;
-    for (let i = 0; i < half; i++) {
-      valueArray[i] = (i / half) * sound.volume;
-      valueArray[FadeHandler.ARRAY_PRECISION - i - 1] = valueArray[i];
-    }
-    FadeHandler.custom(gainNode, sound, valueArray);
-  }
-
-  static thud(gainNode, sound) {
-    const exp = 2;
-    const valueArray = new Float32Array(FadeHandler.ARRAY_PRECISION);
-    const half = FadeHandler.ARRAY_PRECISION / 2;
-    for (let i = 0; i < half; i++) {
-      valueArray[i] = (sound.volume * i ** exp) / half ** exp;
-      valueArray[FadeHandler.ARRAY_PRECISION - i - 1] = valueArray[i];
-    }
-    FadeHandler.custom(gainNode, sound, valueArray);
+    gainNode.gain.linearRampToValueAtTime(0, sound.time(0));
+    gainNode.gain.linearRampToValueAtTime(sound.volume, sound.time(0.5));
+    gainNode.gain.linearRampToValueAtTime(0, sound.time(1));
   }
 
   static pulse(gainNode, sound) {
-    const valueArray = new Float32Array(FadeHandler.ARRAY_PRECISION);
-    const lim = FadeHandler.ARRAY_PRECISION;
-    for (let i = 0; i < lim; i++) {
-      valueArray[i] = Math.sin((i / lim) * Math.PI);
-      if (valueArray[i] < 0.5) valueArray[i] *= 2 * valueArray[i];
-      else valueArray[i] = 1 - (1 - valueArray[i]) ** 2;
-      valueArray[i] *= sound.volume;
-    }
-    FadeHandler.custom(gainNode, sound, valueArray);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, sound.time(0));
+    gainNode.gain.exponentialRampToValueAtTime(sound.volume, sound.time(0.5));
+    gainNode.gain.exponentialRampToValueAtTime(0.01, sound.time(1));
+  }
+
+  static wave(gainNode, sound) {
+    // TODO: Playing w/ attack, sustain, and release would be interesting
+    const v = sound.volume;
+    gainNode.gain.setValueAtTime(0.01, sound.time(0));
+    gainNode.gain.linearRampToValueAtTime(v * 1.1, sound.time(0.1));
+    gainNode.gain.exponentialRampToValueAtTime(v * 0.8, sound.time(0.4));
+    gainNode.gain.linearRampToValueAtTime(0.01, sound.time(1));
   }
 
   static custom(gainNode, sound, valueArray) {
