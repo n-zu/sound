@@ -44,7 +44,17 @@ const getConfig = () => {
   const chord_type = document.getElementById("chord").value;
   const chord_notes = Chord.TYPES[chord_type];
 
-  return { oscillatorType, frequency, duration, volume, fade, chord_notes };
+  const shift = Number(document.getElementById("shift").value);
+
+  return {
+    oscillatorType,
+    frequency,
+    duration,
+    volume,
+    fade,
+    chord_notes,
+    shift,
+  };
 };
 
 const playNote = () => {
