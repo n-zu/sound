@@ -12,6 +12,6 @@ It permits playing notes using common note names and octaves as-well as playing 
 
 chords are defined as an array of notes, they can be built based on a root note and a chord type.
 
-## Sandbox
+## Pages
 
-The project includes a web sandbox to play with notes and chords in `/sandbox`.
+The project includes a web sandbox to play with notes and chords in `/pages`.
