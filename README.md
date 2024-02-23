@@ -16,4 +16,4 @@ chords are defined as an array of notes, they can be built based on a root note 
 
 The project includes a web sandbox to play with notes and chords in `/pages`.
 
-[Go to Pages](./pages/)
+[Go to Pages](https://n-zu.github.io/sound/pages/)
