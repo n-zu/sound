@@ -1,5 +1,5 @@
-import Sound from "../src/sound.js";
-import Chord from "../src/chord.js";
+import Sound from "../../src/sound.js";
+import Chord from "../../src/chord.js";
 
 const setSelectOptions = (selectId, optionMap, groupIfString = false) => {
   const select = document.getElementById(selectId);
@@ -27,6 +27,7 @@ setSelectOptions("osc-type", Sound.OSC_TYPES);
 setSelectOptions("note", Sound.NOTES);
 setSelectOptions("fade", Sound.FADE_TYPES);
 setSelectOptions("chord", Chord._TYPES, true);
+setSelectOptions("harmonics", Chord._HARMONICS, true);
 
 const getConfig = () => {
   const oscillatorTypeKey = document.getElementById("osc-type").value;
@@ -44,15 +45,19 @@ const getConfig = () => {
   const chord_type = document.getElementById("chord").value;
   const chord_notes = Chord.TYPES[chord_type];
 
+  const harmonics_type = document.getElementById("harmonics").value;
+  const harmonics = Chord.HARMONICS[harmonics_type];
+
   const shift = Number(document.getElementById("shift").value);
 
   return {
-    oscillatorType,
     frequency,
     duration,
     volume,
+    oscillatorType,
     fade,
     chord_notes,
+    harmonics,
     shift,
   };
 };
@@ -65,8 +70,8 @@ const playNote = () => {
 const playChord = () => {
   const config = getConfig();
   const chord_notes = config.chord_notes;
-  const chord = new Chord(chord_notes, config);
-  chord.play();
+  const harmonics = config.harmonics;
+  Chord.fromSound(config, chord_notes, harmonics).play();
 };
 
 document.getElementById("playNote").addEventListener("click", playNote);
