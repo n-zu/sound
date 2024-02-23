@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sound Board</title>
 
     <link
@@ -9,9 +10,11 @@
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     />
     <link rel="stylesheet" href="../common/style.css" />
+    <script type="module" src="../common/script.js" defer></script>
     <script type="module" src="script.js" defer></script>
   </head>
   <body>
+    <nav></nav>
     <main class="container">
       <h1>Sound Board</h1>
       <form onsubmit="return false;">
@@ -47,13 +50,13 @@
         </div>
 
         <label for="osc-type">Oscillator Type</label>
-        <fieldset class="grid" id="osc-type" class="button-grid"></fieldset>
+        <fieldset id="osc-type" class="grid button-grid"></fieldset>
 
         <label for="note">Octave - Note</label>
         <fieldset id="note" class="button-grid"></fieldset>
 
         <label for="fade">Fade</label>
-        <fieldset class="grid" id="fade" class="button-grid"></fieldset>
+        <fieldset id="fade" class="grid button-grid"></fieldset>
 
         <h2>Chord</h2>
         <div class="flex-container">
