@@ -1,0 +1,23 @@
+button.badge {
+  margin-bottom: 1rem;
+  padding: 0.3rem 1rem;
+  border-radius: 1.5rem;
+  background-color: #0000;
+}
+button.badge:hover {
+  background-color: var(--pico-primary-background);
+  color: var(--pico-primary-inverse);
+}
+button.badge:hover a {
+  color: var(--pico-primary-inverse);
+}
+button.badge a {
+  text-decoration: none;
+}
+
+h2 {
+  margin-top: 1.5rem;
+}
+h3 {
+  margin-top: 1rem;
+}

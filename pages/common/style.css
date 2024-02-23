@@ -1,38 +1,39 @@
-@font-face {
-  font-family: "Source Sans 3";
-  src: url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
-}
-@font-face {
-  font-family: "Open Sans";
-  src: url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
-}
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
 
 body main * {
   font-family: "Open Sans", sans-serif;
+  box-sizing: border-box;
+}
+
+.button-grid .grid {
+  gap: 0.2rem;
 }
 
 nav {
+  position: sticky;
+  top: 0;
+  height: 1.6rem;
   display: flex;
   justify-content: flex-start;
-  background-color: #333;
+  background-color: var(--pico-form-element-background-color);
   font-family: "Source Sans 3", sans-serif;
+  z-index: 100;
 }
 
 nav a {
   text-decoration: none;
   padding: 0.2rem 1rem;
   font-size: 0.9rem;
-  color: white;
+  height: 100%;
+  color: var(--pico-primary-inverse);
 }
 nav a:hover {
-  background-color: #555;
+  background-color: hsl(210, 26%, 26%);
+  background-color: var(--pico-form-element-border-color);
 }
 nav a.active {
   background-color: var(--pico-primary-background);
-  opacity: 0.8;
-}
-nav a.active:hover {
-  opacity: 1;
 }
 
 .flex-container {
@@ -57,4 +58,22 @@ nav a.active:hover {
   padding: 0.2rem;
   margin-bottom: 0.2rem;
   white-space: nowrap;
+}
+
+dl {
+  display: grid;
+  --min-col-size: max(20rem, 30%);
+  grid-template-columns: repeat(auto-fill, minmax(var(--min-col-size), 1fr));
+  column-gap: 2rem;
+  row-gap: 1rem;
+}
+
+dl li {
+  list-style-type: none;
+}
+dl dt {
+  font-weight: bold;
+}
+dl dd {
+  margin: 0;
 }
