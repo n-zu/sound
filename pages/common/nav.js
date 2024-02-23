@@ -4,11 +4,18 @@ const ROUTES = {
   SoundBoard: "/pages/soundboard/",
 };
 
+const getRouteData = () => {
+  const fullRoute = window.location.origin + window.location.pathname;
+  // split on last occurence of /pages
+  const [domain, route] = fullRoute.split(/\/pages(?!.*\/pages)/);
+  const currentRoute = "/pages" + route;
+  return { domain, currentRoute };
+};
+
 function addNav() {
   const nav = document.querySelector("nav");
 
-  const currentRoute = window.location.pathname;
-  const domain = window.location.origin;
+  const { domain, currentRoute } = getRouteData();
 
   for (const [key, route] of Object.entries(ROUTES)) {
     var a = document.createElement("a");
