@@ -4,38 +4,12 @@
     <meta charset="UTF-8" />
     <title>Sound Board</title>
 
-    <script type="module" src="script.js" defer></script>
-
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     />
-
-    <style>
-      .slider {
-        display: flex;
-        gap: 0.5rem;
-        align-items: flex-end;
-      }
-      .slider input,
-      .slider label {
-        margin-bottom: 1px;
-      }
-
-      .slider button {
-        margin-bottom: -5px;
-        padding: 0.2rem 1rem;
-        white-space: nowrap;
-      }
-      .slider:has(button) {
-        margin-bottom: 1rem;
-      }
-      .buttongrid button {
-        padding: 0.2rem;
-        margin-bottom: 0.2rem;
-        white-space: nowrap;
-      }
-    </style>
+    <link rel="stylesheet" href="../common/style.css" />
+    <script type="module" src="script.js" defer></script>
   </head>
   <body>
     <main class="container">
@@ -44,7 +18,7 @@
         <div class="grid">
           <div class="form-group">
             <label for="_duration">Duration</label>
-            <div class="slider">
+            <div class="flex-container">
               <input
                 type="range"
                 id="duration"
@@ -58,7 +32,7 @@
           </div>
           <div class="form-group">
             <label for="_volume">Volume</label>
-            <div class="slider">
+            <div class="flex-container">
               <input
                 type="range"
                 id="volume"
@@ -73,16 +47,16 @@
         </div>
 
         <label for="osc-type">Oscillator Type</label>
-        <fieldset class="grid" id="osc-type" class="buttongrid"></fieldset>
+        <fieldset class="grid" id="osc-type" class="button-grid"></fieldset>
 
         <label for="note">Octave - Note</label>
-        <fieldset id="note" class="buttongrid"></fieldset>
+        <fieldset id="note" class="button-grid"></fieldset>
 
         <label for="fade">Fade</label>
-        <fieldset class="grid" id="fade" class="buttongrid"></fieldset>
+        <fieldset class="grid" id="fade" class="button-grid"></fieldset>
 
         <h2>Chord</h2>
-        <div class="slider">
+        <div class="flex-container">
           <input
             type="range"
             id="shift"
@@ -95,9 +69,9 @@
           <label>shift</label>
         </div>
         <br />
-        <fieldset id="chord" class="buttongrid"></fieldset>
+        <fieldset id="chord" class="button-grid"></fieldset>
         <label for="harmonics">Harmonics</label>
-        <fieldset id="harmonics" class="buttongrid"></fieldset>
+        <fieldset id="harmonics" class="button-grid"></fieldset>
       </form>
     </main>
   </body>

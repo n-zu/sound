@@ -1,0 +1,60 @@
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+}
+
+body main * {
+  font-family: "Open Sans", sans-serif;
+}
+
+nav {
+  display: flex;
+  justify-content: flex-start;
+  background-color: #333;
+  font-family: "Source Sans 3", sans-serif;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 0.2rem 1rem;
+  font-size: 0.9rem;
+  color: white;
+}
+nav a:hover {
+  background-color: #555;
+}
+nav a.active {
+  background-color: var(--pico-primary-background);
+  opacity: 0.8;
+}
+nav a.active:hover {
+  opacity: 1;
+}
+
+.flex-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+.flex-container input,
+.flex-container label {
+  margin-bottom: 1px;
+}
+
+.flex-container button {
+  margin-bottom: -5px;
+  padding: 0.2rem 1rem;
+  white-space: nowrap;
+}
+.flex-container:has(button) {
+  margin-bottom: 1rem;
+}
+.button-grid button {
+  padding: 0.2rem;
+  margin-bottom: 0.2rem;
+  white-space: nowrap;
+}
