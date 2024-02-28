@@ -32,15 +32,3 @@ function addNav() {
 }
 
 addNav();
-
-/*
-
-nav in pages/index.html:
-
-<nav>
-    <a class="active">Home</a>
-    <a href="soundbox/">SoundBox</a>
-    <a href="soundboard/">SoundBoard</a>
-  </nav>
-
-  */
